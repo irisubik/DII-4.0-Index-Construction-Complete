@@ -377,7 +377,7 @@ n_distinct(Ex_complete_database_long$Code)
 
 distinct_values_big <- distinct(Ex_complete_database_long, Code) %>% pull(Code)
 distinct_values_complete <- distinct(Index_Rebuild, Code) %>% pull(Code)
-
+# 
 diff_df1_not_in_df2 <- setdiff(distinct_values_complete, distinct_values_big)
 diff_df1_not_in_df2
 

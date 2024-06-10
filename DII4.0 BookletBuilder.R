@@ -273,6 +273,17 @@ Ex_INDEX_EP_Combined <- Ex_INDEX_EP_Combined %>%
   # Sort observations by following hierarchy
   arrange(desc(IsCountry), Country, Year)
 
+
+################################################################################################################
+
+dir.create("Booklet Prints")
+
+write_xlsx(Ex_INDEX_EP_Combined, paste0("Booklet Prints/State_Score_Index_Booklet_WIDE_Region", Sys.Date(), ".xlsx"), format_headers = F)
+
+#####################################################################################################################################################################
+
+
+
 ################################################################################################################################################
 
 ################################### Generate BoxPlot Statistics and Score/Momentum Quartiles ##################################################
@@ -327,13 +338,6 @@ Ex_INDEX_EP_Combined <- Ex_INDEX_EP_Combined %>%
   select_all(funs(gsub("_", " ", .)))
 
 
-################################################################################################################
-
-dir.create("Booklet Prints")
-
-write_xlsx(Ex_INDEX_EP_Combined, paste0("Booklet Prints/State_Score_Index_Booklet_WIDE_Region", Sys.Date(), ".xlsx"), format_headers = F)
-
-#####################################################################################################################################################################
 
 colnames(Ex_INDEX_EP_Combined)
 
