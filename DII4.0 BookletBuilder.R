@@ -219,6 +219,16 @@ Ex_INDEX_EP_Combined_y <- Ex_INDEX_EP_Combined %>%
   mutate(CountryName = paste(MC_Region, "median", sep = " ")) %>%
   bind_rows(Ex_INDEX_EP_Combined_x, .)
 
+## Region Averages
+
+Ex_INDEX_EP_Combined_y2 <- Ex_INDEX_EP_Combined %>%
+  group_by(Year, MC_Region) %>%
+  summarise_at(Annual_and_Momentum_Vector, function(x) mean(x)) %>%
+  ungroup() %>%
+  mutate(IsCountry = 0) %>%
+  mutate(CountryName = paste(MC_Region, "mean", sep = " ")) %>%
+  bind_rows(Ex_INDEX_EP_Combined_y, .)
+
 # attach X ^
 
 ## Zone Medians ##
@@ -229,9 +239,9 @@ Ex_INDEX_EP_Combined_z <- Ex_INDEX_EP_Combined %>%
   ungroup() %>%
   mutate(IsCountry = 0) %>%
   mutate(CountryName = paste(`Index Zone`, "median", sep = " ")) %>%
-  bind_rows(Ex_INDEX_EP_Combined_y, .)
+  bind_rows(Ex_INDEX_EP_Combined_y2, .)
 
-# attach y ^
+# attach y2 ^
 
 ## Global Medians ##
 
@@ -245,13 +255,22 @@ Ex_INDEX_EP_Combined_q <- Ex_INDEX_EP_Combined %>%
 
 # attach z ^
 
+## Global Medians ##
+
+Ex_INDEX_EP_Combined_q2 <- Ex_INDEX_EP_Combined %>%
+  group_by(Year) %>%
+  summarise_at(Annual_and_Momentum_Vector, function(x) mean(x)) %>%
+  ungroup() %>%
+  mutate(IsCountry = 0) %>%
+  mutate(CountryName = "World Wide - Mean") %>%
+  bind_rows(Ex_INDEX_EP_Combined_q, .)
 ##### Import dataframe with corresponding country codes for each median countryname
 
 Booklet_Median_Codes <- read_excel("Booklet_Median_Codes.xlsx")
 
 #### Natural join country code dataframe for medians to our core dataframe (replace median NA codes with specific median codes)
 
-Ex_INDEX_EP_Combined <- natural_join(Ex_INDEX_EP_Combined_q, Booklet_Median_Codes, by = c("CountryName"), jointype = "FULL")
+Ex_INDEX_EP_Combined <- natural_join(Ex_INDEX_EP_Combined_q2, Booklet_Median_Codes, by = c("CountryName"), jointype = "FULL")
 
 # merge q with code booklet ^
 
@@ -275,6 +294,7 @@ Ex_INDEX_EP_Combined <- Ex_INDEX_EP_Combined %>%
 
 
 ################################################################################################################
+State_Wide <- Ex_INDEX_EP_Combined
 
 dir.create("Booklet Prints")
 

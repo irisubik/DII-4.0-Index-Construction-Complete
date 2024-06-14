@@ -32,8 +32,10 @@ library(readxl)
 # 1. Import country reference info excel
 increg_mconly <- read_excel("increg_mc.xlsx")
 #modified the reference table here.WB_Region refers Income group
-WB_Region <- read_excel("income group 2022.xlsx")
-increg_wbmc <- merge(increg_mconly[c("Country", "MC_Region", "SubRegion")], WB_Region, by = "Country", all = T)
+WB_Region <- read_excel("income group 2022.xlsx") %>%
+  select(-CountryName)
+
+increg_wbmc <- merge(increg_mconly[c("Country", "CountryName", "MC_Region", "SubRegion")], WB_Region, by = "Country", all = T)
 
 #in prior file, LGINC column is incorrect
 increg_wbmc <- increg_wbmc %>%

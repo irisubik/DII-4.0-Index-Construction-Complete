@@ -41,23 +41,19 @@ round2 <- function(x) round(X, digits = 2)
 
 #### Define useful vectors used later ######
 
-Score_Vector <- c("Digital Index Score")
 Drivers_Vector <- unique(Ex_Database_RTMI_LONG_Drivers$Driver)
 Components_Vector <- unique(Ex_Database_RTMI_LONG_Components$Component)
 Clusters_Vector <- unique(Ex_Database_RTMI_LONG_Clusters$Cluster)
-Annual_Values_Vector <- c(Score_Vector, Drivers_Vector, Components_Vector, Clusters_Vector)
+Annual_Values_Vector <- c(Drivers_Vector, Components_Vector, Clusters_Vector)
 
 ### Transform long cluster, component, and final score sheets into wide format dataframes, and merge ###
 
-Ex_INDEX_WIDE_Scores <- Ex_Database_RTMI_LONG_Scores %>%
-  rename(`Digital Index Score` = value)
 Ex_INDEX_WIDE_Clusters <- dcast(Ex_Database_RTMI_LONG_Clusters[c("Country", "Year", "Cluster", "value")], Country + Year ~ Cluster)
 Ex_INDEX_WIDE_Components <- dcast(Ex_Database_RTMI_LONG_Components[c("Country", "Year", "Component", "value")], Country + Year ~ Component)
 Ex_INDEX_WIDE_Drivers <- dcast(Ex_Database_RTMI_LONG_Drivers[c("Country", "Year", "Driver", "value")], Country + Year ~ Driver)
 
 Ex_INDEX_EP_Combined <- merge(Ex_INDEX_WIDE_Components, Ex_INDEX_WIDE_Clusters, by = c("Country", "Year"), all = T)
 Ex_INDEX_EP_Combined <- merge(Ex_INDEX_WIDE_Drivers, Ex_INDEX_EP_Combined, by = c("Country", "Year"), all = T)
-Ex_INDEX_EP_Combined <- merge(Ex_INDEX_WIDE_Scores, Ex_INDEX_EP_Combined, by = c("Country", "Year"), all = T)
 
 ##########################################################################################################################################
 
@@ -256,6 +252,16 @@ Ex_INDEX_EP_Combined_y <- Ex_INDEX_EP_Combined %>%
 
 # attach X ^
 
+## Region Means
+
+Ex_INDEX_EP_Combined_y2 <- Ex_INDEX_EP_Combined %>%
+  group_by(Year, MC_Region) %>%
+  summarise_at(Annual_and_Momentum_Vector, function(x) mean(x)) %>%
+  ungroup() %>%
+  mutate(IsCountry = 0) %>%
+  mutate(CountryName = paste(MC_Region, "mean", sep = " ")) %>%
+  bind_rows(Ex_INDEX_EP_Combined_y, .)
+
 ## Zone Medians ##
 
 # Ex_INDEX_EP_Combined_z <- Ex_INDEX_EP_Combined %>%
@@ -276,9 +282,19 @@ Ex_INDEX_EP_Combined_q <- Ex_INDEX_EP_Combined %>%
   ungroup() %>%
   mutate(IsCountry = 0) %>%
   mutate(CountryName = "World Wide - Median") %>%
-  bind_rows(Ex_INDEX_EP_Combined_y, .)
+  bind_rows(Ex_INDEX_EP_Combined_y2, .)
 
 # attach z ^
+
+## Global Means ##
+
+Ex_INDEX_EP_Combined_q2 <- Ex_INDEX_EP_Combined %>%
+  group_by(Year) %>%
+  summarise_at(Annual_and_Momentum_Vector, function(x) mean(x)) %>%
+  ungroup() %>%
+  mutate(IsCountry = 0) %>%
+  mutate(CountryName = "World Wide - Mean") %>%
+  bind_rows(Ex_INDEX_EP_Combined_q, .)
 
 ##### Import dataframe with corresponding country codes for each median countryname
 
@@ -286,7 +302,7 @@ Booklet_Median_Codes <- read_excel("Booklet_Median_Codes.xlsx")
 
 #### Natural join country code dataframe for medians to our core dataframe (replace median NA codes with specific median codes)
 
-Ex_INDEX_EP_Combined <- natural_join(Ex_INDEX_EP_Combined_q, Booklet_Median_Codes, by = c("CountryName"), jointype = "FULL")
+Ex_INDEX_EP_Combined <- natural_join(Ex_INDEX_EP_Combined_q2, Booklet_Median_Codes, by = c("CountryName"), jointype = "FULL")
 
 # merge q with code booklet ^
 
@@ -307,6 +323,17 @@ Ex_INDEX_EP_Combined <- Ex_INDEX_EP_Combined %>%
   relocate("IsCountry", .after = "Country") %>%
   # Sort observations by following hierarchy
   arrange(desc(IsCountry), Country, Year)
+
+################################################################################################################
+
+Driver_Wide <- Ex_INDEX_EP_Combined
+
+dir.create("Booklet Prints")
+
+write_xlsx(Ex_INDEX_EP_Combined, paste0("Booklet Prints/Driver_Level_Index_Booklet_WIDE_Region", Sys.Date(), ".xlsx"), format_headers = F)
+
+#####################################################################################################################################################################
+
 
 ################################################################################################################################################
 
