@@ -263,14 +263,14 @@ Ex_INDEX_EP_Combined_y2 <- Ex_INDEX_EP_Combined %>%
   bind_rows(Ex_INDEX_EP_Combined_y, .)
 
 ## Zone Medians ##
-
-# Ex_INDEX_EP_Combined_z <- Ex_INDEX_EP_Combined %>%
-#   group_by(Year, `Digital Index Score Zone`) %>%
+# Ex_INDEX_EP_Combined_z1 <- Ex_INDEX_EP_Combined %>%
+#   group_by(Year, `Zone`) %>%
 #   summarise_at(Annual_and_Momentum_Vector, function(x) median(x)) %>%
 #   ungroup() %>%
 #   mutate(IsCountry = 0) %>%
-#   mutate(CountryName = paste(`Digital Index Score Zone`, "median", sep = " ")) %>%
-#   bind_rows(Ex_INDEX_EP_Combined_y, .)
+#   mutate(CountryName = paste(`Zone`, "median", sep = " ")) %>%
+#   bind_rows(Ex_INDEX_EP_Combined_y2, .)
+
 
 # attach y ^
 

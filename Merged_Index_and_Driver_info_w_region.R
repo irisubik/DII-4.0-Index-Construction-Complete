@@ -26,6 +26,24 @@ write_xlsx(Merged_State_Driver, paste0("Booklet Prints/Booklet_w_regional_info_"
 
 ###########################################################################
 ###########################################################################prepare file for SSU 
+DEI2020_Scores_SSU_FULL_z <- Merged_State_Driver %>%
+  filter(IsCountry == 1) %>%
+  group_by(Year, `Index Zone`) %>%
+  summarise(`Index Score` = median(`Index Score`), 
+            `Demand` = median(`Demand`),
+            `Supply` = median(`Supply`),
+            `Institutional Environment` = median(`Institutional Environment`),
+            `Innovation` = median(`Innovation`),
+            `Index Score Momentum` = median(`Index Score Momentum`),
+            `Demand Momentum` = median(`Demand Momentum`),
+            `Supply Momentum` = median(`Supply Momentum`),
+            `Institutional Environment Momentum` = median(`Institutional Environment Momentum`),
+            `Innovation Momentum` = median(`Innovation Momentum`)) %>%
+  ungroup() %>%
+  mutate(CountryName = paste(`Index Zone`, "median", sep = " "), IsCountry = 0) %>%
+  bind_rows(Merged_State_Driver, .)
+
+
 DEI2022_Scores_SSU_FULL_f <- Merged_State_Driver %>%
   filter(IsCountry == 1) %>%
   group_by(Year) %>%
@@ -41,7 +59,7 @@ DEI2022_Scores_SSU_FULL_f <- Merged_State_Driver %>%
             `Innovation Momentum` = median(`Innovation Momentum`)) %>%
   ungroup() %>%
   mutate(CountryName = "World Wide - Reference", IsCountry = 0, Country = "WWR") %>%
-  bind_rows(Merged_State_Driver, .)
+  bind_rows(DEI2020_Scores_SSU_FULL_z, .)
 
 
 DEI2022_Scores_SSU_FULL <- DEI2022_Scores_SSU_FULL_f %>%

@@ -233,13 +233,13 @@ Ex_INDEX_EP_Combined_y2 <- Ex_INDEX_EP_Combined %>%
 
 ## Zone Medians ##
 
-Ex_INDEX_EP_Combined_z <- Ex_INDEX_EP_Combined %>%
-  group_by(Year, `Index Zone`) %>%
-  summarise_at(Annual_and_Momentum_Vector, function(x) median(x)) %>%
-  ungroup() %>%
-  mutate(IsCountry = 0) %>%
-  mutate(CountryName = paste(`Index Zone`, "median", sep = " ")) %>%
-  bind_rows(Ex_INDEX_EP_Combined_y2, .)
+# Ex_INDEX_EP_Combined_z <- Ex_INDEX_EP_Combined %>%
+#   group_by(Year, `Index Zone`) %>%
+#   summarise_at(Annual_and_Momentum_Vector, function(x) median(x)) %>%
+#   ungroup() %>%
+#   mutate(IsCountry = 0) %>%
+#   mutate(CountryName = paste(`Index Zone`, "median", sep = " ")) %>%
+#   bind_rows(Ex_INDEX_EP_Combined_y2, .)
 
 # attach y2 ^
 
@@ -251,11 +251,11 @@ Ex_INDEX_EP_Combined_q <- Ex_INDEX_EP_Combined %>%
   ungroup() %>%
   mutate(IsCountry = 0) %>%
   mutate(CountryName = "World Wide - Median") %>%
-  bind_rows(Ex_INDEX_EP_Combined_z, .)
+  bind_rows(Ex_INDEX_EP_Combined_y2, .)
 
 # attach z ^
 
-## Global Medians ##
+## Global means ##
 
 Ex_INDEX_EP_Combined_q2 <- Ex_INDEX_EP_Combined %>%
   group_by(Year) %>%
@@ -266,7 +266,8 @@ Ex_INDEX_EP_Combined_q2 <- Ex_INDEX_EP_Combined %>%
   bind_rows(Ex_INDEX_EP_Combined_q, .)
 ##### Import dataframe with corresponding country codes for each median countryname
 
-Booklet_Median_Codes <- read_excel("Booklet_Median_Codes.xlsx")
+Booklet_Median_Codes <- read_excel("Booklet_Median_Codes.xlsx") %>%
+  filter(!Country %in% c("STOM", "SLOM", "BROM", "WCOM"))
 
 #### Natural join country code dataframe for medians to our core dataframe (replace median NA codes with specific median codes)
 
