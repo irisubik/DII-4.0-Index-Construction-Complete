@@ -74,11 +74,15 @@ Ex_INDEX_EP_Combined <- Ex_INDEX_EP_Combined %>%
   # Apply following function to each variable listed in Annual_Values_Vector: Multiply all values by 3, and add 50 (See discussion on momentum for why)
   mutate_at(Annual_Values_Vector, stretch3add50) %>%
   # create "time elapsed in years" column for CAGR calculations
-  mutate(t = Year - 2009) %>%
+  mutate(t = Year - 2013) %>%
   # Apply following function to each variable listed in Annual_Values_Vector: CAGR using a 2011/2012 averaged base year period
   # NOTE: 2012 in this sheet is the SECOND year of time series. Make adjustments for future indices accordingly
   ## Beautiful function: this construction creates new columns that end with "Momentum". See function name following funs()
-  mutate_at(Annual_Values_Vector, .funs = funs(Momentum = (((. / (rollmean(.,2,fill=0,align="right"))[Year == 2009])^(1/t)) - 1) * 100)) %>%
+  # Calculate momentum from 2013 onwards, set momentum to NA for years before 2013
+  mutate(across(all_of(Annual_Values_Vector), ~ifelse(Year > 2013,
+                                                      (((. / first(.[Year == 2013]))^(1/t)) - 1) * 100,
+                                                      NA_real_),
+                .names = "{col} Momentum")) %>%
   # Remove group restrictions for future functions
   ungroup() %>%
   # Remove "time elapsed" column
