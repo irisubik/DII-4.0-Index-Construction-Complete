@@ -124,6 +124,11 @@ Ex_Database_RTMI_LONG_Indicators <- Ex_Database_RTMI_LONG_Indicators %>%
   mutate(Weight = ifelse(Code %in% c('gov_mbl','remits_mbl', 'adlrt'), 0, Weight))
 
 
+# dir.create("Analysis")
+# 
+# write_xlsx(Ex_Database_RTMI_LONG_Indicators, paste0("Analysis/Rescaled_Indicators_", Sys.Date(), ".xlsx"), format_headers = F)
+# 
+
 Ex_Database_RTMI_LONG_Clusters <- Ex_Database_RTMI_LONG_Indicators %>%
   #### Weight ####
 # Multiply values through by indicator weight
