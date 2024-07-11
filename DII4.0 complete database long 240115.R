@@ -48,7 +48,7 @@ increg_wbmc <- increg_wbmc %>%
     TRUE ~ NA_integer_ )) %>%
   mutate(LGINC = ifelse(`Income Group Num` %in% c(1:2), 1, 2)) 
   
-Ex_complete_database <- read_excel("merged_all_year_ind_240628.xlsx", guess_max = 5000) 
+Ex_complete_database <- read_excel("merged_all_year_ind_240709.xlsx", guess_max = 5000) 
 
 latest_data_years <- Ex_complete_database %>%
   summarise(across(where(is.numeric), ~ max(Year[!is.na(.)], na.rm = TRUE))) %>%
