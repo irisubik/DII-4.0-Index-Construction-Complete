@@ -48,7 +48,7 @@ increg_wbmc <- increg_wbmc %>%
     TRUE ~ NA_integer_ )) %>%
   mutate(LGINC = ifelse(`Income Group Num` %in% c(1:2), 1, 2)) 
   
-Ex_complete_database <- read_excel("merged_all_year_ind_240628.xlsx", guess_max = 5000) 
+Ex_complete_database <- read_excel("merged_all_year_ind_240709.xlsx", guess_max = 5000) 
 
 latest_data_years <- Ex_complete_database %>%
   summarise(across(where(is.numeric), ~ max(Year[!is.na(.)], na.rm = TRUE))) %>%
@@ -56,11 +56,14 @@ latest_data_years <- Ex_complete_database %>%
     cols = everything(), 
     names_to = "Code", 
     values_to = "latest_year"
-  )
+  ) %>%
+  filter(!Code == 'Year')
 
 latest_data_years <- latest_data_years %>%
-  left_join(Index_Rebuild, by = 'Code')
+  inner_join(Index_Rebuild, by = 'Code') %>%
+  select(Code, latest_year, Indicator, Cluster, Component, Driver, Source, Weight_Centrality, Weight_Type, Type, Normalizer)
 
+write_xlsx(latest_data_years, paste0("Analysis/Indicator_latest_years", Sys.Date(), ".xlsx"), format_headers = F)
 
 n_distinct(Ex_complete_database$Country)
 
