@@ -50,17 +50,17 @@ increg_wbmc <- increg_wbmc %>%
   
 Ex_complete_database <- read_excel("merged_all_year_ind_240709.xlsx", guess_max = 5000) 
 
-latest_data_years <- Ex_complete_database %>%
-  summarise(across(where(is.numeric), ~ max(Year[!is.na(.)], na.rm = TRUE))) %>%
-  pivot_longer(
-    cols = everything(), 
-    names_to = "Code", 
-    values_to = "latest_year"
-  )
-
-latest_data_years <- latest_data_years %>%
-  left_join(Index_Rebuild, by = 'Code')
-
+# latest_data_years <- Ex_complete_database %>%
+#   summarise(across(where(is.numeric), ~ max(Year[!is.na(.)], na.rm = TRUE))) %>%
+#   pivot_longer(
+#     cols = everything(), 
+#     names_to = "Code", 
+#     values_to = "latest_year"
+#   )
+# 
+# latest_data_years <- latest_data_years %>%
+#   left_join(Index_Rebuild, by = 'Code')
+# 
 
 n_distinct(Ex_complete_database$Country)
 
@@ -95,7 +95,7 @@ egy_pos_data <- Ex_complete_database[Ex_complete_database$Country == 'EGY',
 #######################################################################################################
 ## -> Rebuild file tells us some indicators needs to be transformed by dividing through by normalizer
 # Import InidcatorInfo tab of Rebuild File and filter to exclude the indicators that already normalized
-Index_Rebuild <- read_excel("DII 4.0 Evolution Rebuild 240604.xlsx")
+Index_Rebuild <- read_excel("DII 4.0 Evolution Rebuild 240711.xlsx")
 Index_Rebuild <- Index_Rebuild %>%
   #Those indicators are already normalized
   filter(!(Index_Rebuild$Code %in% c("cpvpc", "cptpc")))
@@ -312,7 +312,7 @@ for(i in 1:nrow(Index_Rebuild)) {
   }
 }
 
-Index_Rebuild <- read_excel("DII 4.0 Evolution Rebuild 240604.xlsx")
+Index_Rebuild <- read_excel("DII 4.0 Evolution Rebuild 240711.xlsx")
 
 sum(Ex_complete_database$ppp_cons == 0, na.rm = TRUE)
 
