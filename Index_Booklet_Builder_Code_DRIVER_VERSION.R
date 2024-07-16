@@ -396,7 +396,8 @@ Ex_INDEX_EP_Combined <- Ex_INDEX_EP_Combined %>%
 
 ### Melt wide format core dataset to long format
 
-Ex_INDEX_EP_Combined_LONG <- melt(Ex_INDEX_EP_Combined, id = (c("Country", "IsCountry", "CountryName", "MC Region", "WB Region", "Income Group 2022", "Year")))
+Ex_INDEX_EP_Combined_LONG <- melt(Ex_INDEX_EP_Combined %>%
+                                    select(-SubRegion, -LGINC, -`Income Group Num`), id = (c("Country", "IsCountry", "CountryName", "MC Region", "WB Region", "Income Group 2022", "Year")))
 
 ### If, then statement creating the new variable "Type". Type describes what type of value is in the value column. Is it a score, a quartile, a zone?
 
@@ -430,7 +431,7 @@ Ex_INDEX_EP_Combined_LONG <- Ex_INDEX_EP_Combined_LONG %>%
 #### Uses the Index Rebuild Sheets to attach cluster-component hierarchy to core dataset #####
 
 Hierarchy_Table_Clusters <- Index_Rebuild_Clusters %>%
-  select(Cluster, Component) %>%
+  select(Cluster, Component, Driver) %>%
   rename(variable_name = Cluster)
 
 Ex_INDEX_EP_Combined_LONG <- merge(Ex_INDEX_EP_Combined_LONG, Hierarchy_Table_Clusters, by = "variable_name", all.x = T, all.y = F)
@@ -439,16 +440,21 @@ Hierarchy_Table_Components <- Index_Rebuild_Components %>%
   select(Component, Driver) %>%
   rename(variable_name = Component)
 
-Ex_INDEX_EP_Combined_LONG <- merge(Ex_INDEX_EP_Combined_LONG, Hierarchy_Table_Components, by = "variable_name", all.x = T, all.y = F)
+Ex_INDEX_EP_Combined_LONG <- natural_join(Ex_INDEX_EP_Combined_LONG, Hierarchy_Table_Components, by = "variable_name", jointype = 'FULL')
+
+Ex_INDEX_EP_Combined_LONG <- Ex_INDEX_EP_Combined_LONG %>%
+  mutate(Driver = case_when(Driver %in% NA ~ variable_name, TRUE ~ Driver))
 
 ###########  Final small adjustments and organize columns ##############################
 
 Ex_INDEX_EP_Combined_LONG <- Ex_INDEX_EP_Combined_LONG %>%
-  mutate(Driver = case_when(Driver %in% NA ~ variable_name, TRUE ~ Driver)) %>%
+  # mutate(Driver = case_when(Driver %in% NA ~ variable_name, TRUE ~ Driver)) %>%
   select(Country, IsCountry, CountryName, `WB Region`, `MC Region`, `Income Group 2022`, Year, variable_name, variable, Type, value, Class, Component, Driver) %>%
   rename(variable_parent = variable_name) %>%
   arrange(desc(IsCountry), Country, Class, Driver, Component, variable_parent, Type)
 
+
+Driver_Ex_INDEX_EP_Combined_LONG <- Ex_INDEX_EP_Combined_LONG
 
 ################################################################################################################################
 

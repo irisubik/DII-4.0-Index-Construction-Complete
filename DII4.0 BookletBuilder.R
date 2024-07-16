@@ -370,7 +370,8 @@ colnames(Ex_INDEX_EP_Combined)
 
 ### Melt wide format core dataset to long format
 
-Ex_INDEX_EP_Combined_LONG <- melt(Ex_INDEX_EP_Combined, id = (c("Country", "IsCountry", "CountryName", "MC Region", "WB Region", "Income Group 2022", "Year")))
+Ex_INDEX_EP_Combined_LONG <- melt(Ex_INDEX_EP_Combined %>%
+                                    select(-SubRegion, -LGINC, -`Income Group Num`), id = (c("Country", "IsCountry", "CountryName", "MC Region", "WB Region","Income Group 2022", "Year")))
 
 ### If, then statement creating the new variable "Type". Type describes what type of value is in the value column. Is it a score, a quartile, a zone?
 
@@ -416,7 +417,7 @@ Ex_INDEX_EP_Combined_LONG <- Ex_INDEX_EP_Combined_LONG %>%
   rename(variable_parent = variable_name) %>%
   arrange(desc(IsCountry), Country, Class, Component, variable_parent, Type)
 
-
+Overall_Ex_INDEX_EP_Combined_LONG <- Ex_INDEX_EP_Combined_LONG
 
 ################################################################################################################################
 
