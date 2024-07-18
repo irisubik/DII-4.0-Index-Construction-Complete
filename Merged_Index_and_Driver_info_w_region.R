@@ -26,7 +26,7 @@ write_xlsx(Merged_State_Driver, paste0("Booklet Prints/Booklet_w_regional_info_"
 
 ###########################################################################
 ###########################################################################prepare file for SSU 
-DEI2020_Scores_SSU_FULL_z <- Merged_State_Driver %>%
+DEI2022_Scores_SSU_FULL_z <- Merged_State_Driver %>%
   filter(IsCountry == 1) %>%
   group_by(Year, `Index Zone`) %>%
   summarise(`Index Score` = median(`Index Score`), 
@@ -59,7 +59,7 @@ DEI2022_Scores_SSU_FULL_f <- Merged_State_Driver %>%
             `Innovation Momentum` = median(`Innovation Momentum`)) %>%
   ungroup() %>%
   mutate(CountryName = "World Wide - Reference", IsCountry = 0, Country = "WWR") %>%
-  bind_rows(DEI2020_Scores_SSU_FULL_z, .)
+  bind_rows(DEI2022_Scores_SSU_FULL_z, .)
 
 
 DEI2022_Scores_SSU_FULL <- DEI2022_Scores_SSU_FULL_f %>%
