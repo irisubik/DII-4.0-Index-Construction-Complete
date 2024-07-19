@@ -149,9 +149,9 @@ total_na_values
 n_distinct(Ex_Database_RTMI_LONG_Clusters$Cluster) 
 #### Attach index cluster rebuild tab with cluster weights ####
 
-# Convert 'Cluster' column to lowercase in both dataframes
-Ex_Database_RTMI_LONG_Clusters$Cluster <- tolower(Ex_Database_RTMI_LONG_Clusters$Cluster)
-Index_Rebuild_Clusters$Cluster <- tolower(Index_Rebuild_Clusters$Cluster)
+# # Convert 'Cluster' column to lowercase in both dataframes
+# Ex_Database_RTMI_LONG_Clusters$Cluster <- tolower(Ex_Database_RTMI_LONG_Clusters$Cluster)
+# Index_Rebuild_Clusters$Cluster <- tolower(Index_Rebuild_Clusters$Cluster)
 
 # fix the names -> DII2 TO DII3 names (follow DII3)
 # Ex_Database_RTMI_LONG_Clusters <- Ex_Database_RTMI_LONG_Clusters %>%

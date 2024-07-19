@@ -117,40 +117,78 @@ DEI2022_Scores_SSU_FULL <- DEI2022_Scores_SSU_FULL %>%
   dplyr::select(Year, CountryCode, CountryCode3, CountryName, Region, IncomeGroup, Quadrant, IsCountry, DEIScore,	MOMScore,	DEIRank, MOMRank, Supply_DEIScore, Supply_DEIRank, Supply_Quadrant, Demand_DEIScore, Demand_DEIRank, Demand_Quadrant, Institutions_DEIScore, 
                 Institutions_DEIRank, Institutions_Quadrant, Innovation_DEIScore, Innovation_DEIRank, Innovation_Quadrant, Supply_MOMScore, Supply_MOMRank, Demand_MOMScore, Demand_MOMRank, Institutions_MOMScore, Institutions_MOMRank, Innovation_MOMScore, Innovation_MOMRank)
 
+# DEI2022_Scores_SSU_FULL <- DEI2022_Scores_SSU_FULL %>%
+#   mutate(CountryName = case_when(CountryCode3 %in% "HKG" ~ "Hong Kong", TRUE ~ as.character(CountryName))) %>%
+#   mutate(CountryCode3 = case_when(CountryName %in% "High income median" ~ "HM", TRUE ~ as.character(CountryCode3))) %>%
+#   mutate(CountryCode3 = case_when(CountryName %in% "Low income median" ~ "LM", TRUE ~ as.character(CountryCode3))) %>%
+#   mutate(CountryCode3 = case_when(CountryName %in% "Lower middle income median" ~ "LMM", TRUE ~ as.character(CountryCode3))) %>%
+#   mutate(CountryCode3 = case_when(CountryName %in% "Upper middle income median" ~ "UMM", TRUE ~ as.character(CountryCode3))) %>%
+#   mutate(CountryCode3 = case_when(CountryName %in% "Asia Pacific median" ~ "APM", TRUE ~ as.character(CountryCode3))) %>%
+#   mutate(CountryCode3 = case_when(CountryName %in% "Europe & Central Asia median" ~ "ECAM", TRUE ~ as.character(CountryCode3))) %>%
+#   mutate(CountryCode3 = case_when(CountryName %in% "Latin America & Caribbean median" ~ "LACM", TRUE ~ as.character(CountryCode3))) %>%
+#   mutate(CountryCode3 = case_when(CountryName %in% "Middle East & Africa median" ~ "MEAM", TRUE ~ as.character(CountryCode3))) %>%
+#   mutate(CountryCode3 = case_when(CountryName %in% "North America median" ~ "NAM", TRUE ~ as.character(CountryCode3))) %>%
+#   mutate(CountryCode3 = case_when(CountryName %in% "Break Out median" ~ "BOM", TRUE ~ as.character(CountryCode3))) %>%
+#   mutate(CountryCode3 = case_when(CountryName %in% "Stall Out median" ~ "SLOM", TRUE ~ as.character(CountryCode3))) %>%
+#   mutate(CountryCode3 = case_when(CountryName %in% "Stand Out median" ~ "SOM", TRUE ~ as.character(CountryCode3))) %>%
+#   mutate(CountryCode3 = case_when(CountryName %in% "Watch Out median" ~ "WOM", TRUE ~ as.character(CountryCode3))) %>%
+#   mutate(CountryCode3 = case_when(CountryName %in% "World Wide - Reference" ~ "WWR", TRUE ~ as.character(CountryCode3))) %>%
+#   mutate(CountryCode3 = case_when(CountryName %in% "World Wide - Median" ~ "WWM", TRUE ~ as.character(CountryCode3))) %>%
+#   mutate(CountryCode = case_when(CountryName %in% "High income median" ~ "HM", TRUE ~ as.character(CountryCode))) %>%
+#   mutate(CountryCode = case_when(CountryName %in% "Low income median" ~ "LM", TRUE ~ as.character(CountryCode))) %>%
+#   mutate(CountryCode = case_when(CountryName %in% "Lower middle income median" ~ "LMM", TRUE ~ as.character(CountryCode))) %>%
+#   mutate(CountryCode = case_when(CountryName %in% "Upper middle income median" ~ "UMM", TRUE ~ as.character(CountryCode))) %>%
+#   mutate(CountryCode = case_when(CountryName %in% "Asia Pacific median" ~ "APM", TRUE ~ as.character(CountryCode))) %>%
+#   mutate(CountryCode = case_when(CountryName %in% "Europe & Central Asia median" ~ "ECAM", TRUE ~ as.character(CountryCode))) %>%
+#   mutate(CountryCode = case_when(CountryName %in% "Latin America & Caribbean median" ~ "LACM", TRUE ~ as.character(CountryCode))) %>%
+#   mutate(CountryCode = case_when(CountryName %in% "Middle East & Africa median" ~ "MEAM", TRUE ~ as.character(CountryCode))) %>%
+#   mutate(CountryCode = case_when(CountryName %in% "North America median" ~ "NAM", TRUE ~ as.character(CountryCode))) %>%
+#   mutate(CountryCode = case_when(CountryName %in% "Break Out median" ~ "BOM", TRUE ~ as.character(CountryCode))) %>%
+#   mutate(CountryCode = case_when(CountryName %in% "Stall Out median" ~ "SLOM", TRUE ~ as.character(CountryCode))) %>%
+#   mutate(CountryCode = case_when(CountryName %in% "Stand Out median" ~ "SOM", TRUE ~ as.character(CountryCode))) %>%
+#   mutate(CountryCode = case_when(CountryName %in% "Watch Out median" ~ "WOM", TRUE ~ as.character(CountryCode))) %>%
+#   mutate(CountryCode = case_when(CountryName %in% "World Wide - Reference" ~ "WR", TRUE ~ as.character(CountryCode))) %>%
+#   mutate(CountryCode = case_when(CountryName %in% "World Wide - Median" ~ "WW", TRUE ~ as.character(CountryCode))) %>%
+#   mutate(Region = case_when(CountryName %in% "World Wide - Reference" ~ "WR", TRUE ~ as.character(Region))) %>%
+#   mutate(Region = case_when(CountryName %in% "World Wide - Median" ~ "WW", TRUE ~ as.character(Region)))
+
+# Create a lookup table for country name to code mappings
+country_code_lookup <- c(
+  "High income median" = "HM",
+  "Low income median" = "LM",
+  "Lower middle income median" = "LMM",
+  "Upper middle income median" = "UMM",
+  "Asia Pacific median" = "APM",
+  "Europe & Central Asia median" = "ECAM",
+  "Latin America & Caribbean median" = "LACM",
+  "Middle East & Africa median" = "MEAM",
+  "North America median" = "NAM",
+  "Break Out median" = "BOM",
+  "Stall Out median" = "SLOM",
+  "Stand Out median" = "SOM",
+  "Watch Out median" = "WOM",
+  "World Wide - Reference" = "WWR",
+  "World Wide - Median" = "WWM"
+)
+
 DEI2022_Scores_SSU_FULL <- DEI2022_Scores_SSU_FULL %>%
-  mutate(CountryName = case_when(CountryCode3 %in% "HKG" ~ "Hong Kong", TRUE ~ as.character(CountryName))) %>%
-  mutate(CountryCode3 = case_when(CountryName %in% "High income median" ~ "HM", TRUE ~ as.character(CountryCode3))) %>%
-  mutate(CountryCode3 = case_when(CountryName %in% "Low income median" ~ "LM", TRUE ~ as.character(CountryCode3))) %>%
-  mutate(CountryCode3 = case_when(CountryName %in% "Lower middle income median" ~ "LMM", TRUE ~ as.character(CountryCode3))) %>%
-  mutate(CountryCode3 = case_when(CountryName %in% "Upper middle income median" ~ "UMM", TRUE ~ as.character(CountryCode3))) %>%
-  mutate(CountryCode3 = case_when(CountryName %in% "Asia Pacific median" ~ "APM", TRUE ~ as.character(CountryCode3))) %>%
-  mutate(CountryCode3 = case_when(CountryName %in% "Europe & Central Asia median" ~ "ECAM", TRUE ~ as.character(CountryCode3))) %>%
-  mutate(CountryCode3 = case_when(CountryName %in% "Latin America & Caribbean median" ~ "LACM", TRUE ~ as.character(CountryCode3))) %>%
-  mutate(CountryCode3 = case_when(CountryName %in% "Middle East & Africa median" ~ "MEAM", TRUE ~ as.character(CountryCode3))) %>%
-  mutate(CountryCode3 = case_when(CountryName %in% "North America median" ~ "NAM", TRUE ~ as.character(CountryCode3))) %>%
-  mutate(CountryCode3 = case_when(CountryName %in% "Break Out median" ~ "BOM", TRUE ~ as.character(CountryCode3))) %>%
-  mutate(CountryCode3 = case_when(CountryName %in% "Stall Out median" ~ "SLOM", TRUE ~ as.character(CountryCode3))) %>%
-  mutate(CountryCode3 = case_when(CountryName %in% "Stand Out median" ~ "SOM", TRUE ~ as.character(CountryCode3))) %>%
-  mutate(CountryCode3 = case_when(CountryName %in% "Watch Out median" ~ "WOM", TRUE ~ as.character(CountryCode3))) %>%
-  mutate(CountryCode3 = case_when(CountryName %in% "World Wide - Reference" ~ "WWR", TRUE ~ as.character(CountryCode3))) %>%
-  mutate(CountryCode3 = case_when(CountryName %in% "World Wide - Median" ~ "WWM", TRUE ~ as.character(CountryCode3))) %>%
-  mutate(CountryCode = case_when(CountryName %in% "High income median" ~ "HM", TRUE ~ as.character(CountryCode))) %>%
-  mutate(CountryCode = case_when(CountryName %in% "Low income median" ~ "LM", TRUE ~ as.character(CountryCode))) %>%
-  mutate(CountryCode = case_when(CountryName %in% "Lower middle income median" ~ "LMM", TRUE ~ as.character(CountryCode))) %>%
-  mutate(CountryCode = case_when(CountryName %in% "Upper middle income median" ~ "UMM", TRUE ~ as.character(CountryCode))) %>%
-  mutate(CountryCode = case_when(CountryName %in% "Asia Pacific median" ~ "APM", TRUE ~ as.character(CountryCode))) %>%
-  mutate(CountryCode = case_when(CountryName %in% "Europe & Central Asia median" ~ "ECAM", TRUE ~ as.character(CountryCode))) %>%
-  mutate(CountryCode = case_when(CountryName %in% "Latin America & Caribbean median" ~ "LACM", TRUE ~ as.character(CountryCode))) %>%
-  mutate(CountryCode = case_when(CountryName %in% "Middle East & Africa median" ~ "MEAM", TRUE ~ as.character(CountryCode))) %>%
-  mutate(CountryCode = case_when(CountryName %in% "North America median" ~ "NAM", TRUE ~ as.character(CountryCode))) %>%
-  mutate(CountryCode = case_when(CountryName %in% "Break Out median" ~ "BOM", TRUE ~ as.character(CountryCode))) %>%
-  mutate(CountryCode = case_when(CountryName %in% "Stall Out median" ~ "SLOM", TRUE ~ as.character(CountryCode))) %>%
-  mutate(CountryCode = case_when(CountryName %in% "Stand Out median" ~ "SOM", TRUE ~ as.character(CountryCode))) %>%
-  mutate(CountryCode = case_when(CountryName %in% "Watch Out median" ~ "WOM", TRUE ~ as.character(CountryCode))) %>%
-  mutate(CountryCode = case_when(CountryName %in% "World Wide - Reference" ~ "WR", TRUE ~ as.character(CountryCode))) %>%
-  mutate(CountryCode = case_when(CountryName %in% "World Wide - Median" ~ "WW", TRUE ~ as.character(CountryCode))) %>%
-  mutate(Region = case_when(CountryName %in% "World Wide - Reference" ~ "WR", TRUE ~ as.character(Region))) %>%
-  mutate(Region = case_when(CountryName %in% "World Wide - Median" ~ "WW", TRUE ~ as.character(Region)))
+  mutate(
+    CountryName = if_else(CountryCode3 == "HKG", "Hong Kong", CountryName),
+    CountryCode3 = coalesce(country_code_lookup[CountryName], CountryCode3),
+    CountryCode = case_when(
+      CountryName %in% names(country_code_lookup) ~ 
+        ifelse(CountryName %in% c("World Wide - Reference", "World Wide - Median"),
+               substr(country_code_lookup[CountryName], 1, 2),
+               country_code_lookup[CountryName]),
+      TRUE ~ CountryCode
+    ),
+    Region = case_when(
+      CountryName == "World Wide - Reference" ~ "WR",
+      CountryName == "World Wide - Median" ~ "WW",
+      TRUE ~ Region
+    )
+  )
+
 
 DEI2022_Scores_SSU_FULL <- DEI2022_Scores_SSU_FULL %>%
   mutate(Region = case_when(CountryCode3 %in% "ISR" ~ "Middle East & Africa", TRUE ~ as.character(Region))) %>%
@@ -161,4 +199,4 @@ DEI2022_Scores_SSU_FULL <- DEI2022_Scores_SSU_FULL %>%
   filter(!grepl("mean", CountryName, ignore.case = TRUE))
 
 dir.create("To SSU")
-write_xlsx(DEI2022_Scores_SSU_FULL, format_headers = F, paste0("To SSU/DEI2022_SSU_Booklet_", Sys.Date(), ".xlsx"))
+write_xlsx(DEI2022_Scores_SSU_FULL, format_headers = F, paste0("To SSU/DEI2023_SSU_Booklet_", Sys.Date(), ".xlsx"))
