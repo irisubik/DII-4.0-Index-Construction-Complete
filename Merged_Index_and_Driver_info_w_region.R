@@ -32,12 +32,12 @@ DEI2022_Scores_SSU_FULL_z <- Merged_State_Driver %>%
   summarise(`Index Score` = median(`Index Score`), 
             `Demand` = median(`Demand`),
             `Supply` = median(`Supply`),
-            `Institutional Environment` = median(`Institutional Environment`),
+            `Institutions` = median(`Institutions`),
             `Innovation` = median(`Innovation`),
             `Index Score Momentum` = median(`Index Score Momentum`),
             `Demand Momentum` = median(`Demand Momentum`),
             `Supply Momentum` = median(`Supply Momentum`),
-            `Institutional Environment Momentum` = median(`Institutional Environment Momentum`),
+            `Institutions Momentum` = median(`Institutions Momentum`),
             `Innovation Momentum` = median(`Innovation Momentum`)) %>%
   ungroup() %>%
   mutate(CountryName = paste(`Index Zone`, "median", sep = " "), IsCountry = 0) %>%
@@ -50,12 +50,12 @@ DEI2022_Scores_SSU_FULL_f <- Merged_State_Driver %>%
   summarise(`Index Score` = quantile(`Index Score`, probs = 2/3, na.rm = TRUE), 
             `Demand` = quantile(`Demand`, probs = 2/3, na.rm = TRUE),
             `Supply` = quantile(`Supply`, probs = 2/3, na.rm = TRUE), #0.35
-            `Institutional Environment` = quantile(`Institutional Environment`, probs = 2/3, na.rm = TRUE),
+            `Institutions` = quantile(`Institutions`, probs = 2/3, na.rm = TRUE),
             `Innovation` = quantile(`Innovation`, probs = 2/3, na.rm = TRUE),
             `Index Score Momentum` = median(`Index Score Momentum`),
             `Demand Momentum` = median(`Demand Momentum`),
             `Supply Momentum` = median(`Supply Momentum`),
-            `Institutional Environment Momentum` = median(`Institutional Environment Momentum`),
+            `Institutions Momentum` = median(`Institutions Momentum`),
             `Innovation Momentum` = median(`Innovation Momentum`)) %>%
   ungroup() %>%
   mutate(CountryName = "World Wide - Reference", IsCountry = 0, Country = "WWR") %>%
@@ -91,27 +91,27 @@ DEI2022_Scores_SSU_FULL <- DEI2022_Scores_SSU_FULL %>%
                 
                 Supply_DEIScore = `Supply`,
                 Demand_DEIScore = `Demand`,
-                Institutions_DEIScore = `Institutional Environment`,
+                Institutions_DEIScore = `Institutions`,
                 Innovation_DEIScore = `Innovation`,
                 
                 Supply_DEIRank = `Supply Rank`,
                 Demand_DEIRank = `Demand Rank`,
-                Institutions_DEIRank = `Institutional Environment Rank`,
+                Institutions_DEIRank = `Institutions Rank`,
                 Innovation_DEIRank = `Innovation Rank`,
                 
                 Demand_Quadrant = `Demand Zone`,
                 Supply_Quadrant = `Supply Zone`,
                 Innovation_Quadrant = `Innovation Zone`,
-                Institutions_Quadrant = `Institutional Environment Zone`,
+                Institutions_Quadrant = `Institutions Zone`,
                 
                 Demand_MOMScore = `Demand Momentum`,
                 Supply_MOMScore = `Supply Momentum`,
-                Institutions_MOMScore = `Institutional Environment Momentum`,
+                Institutions_MOMScore = `Institutions Momentum`,
                 Innovation_MOMScore = `Innovation Momentum`,
                 
                 Demand_MOMRank = `Demand Momentum Rank`,
                 Supply_MOMRank = `Supply Momentum Rank`,
-                Institutions_MOMRank = `Institutional Environment Momentum Rank`,
+                Institutions_MOMRank = `Institutions Momentum Rank`,
                 Innovation_MOMRank = `Innovation Momentum Rank`) %>%
   #dplyr::select(Year, iso2c, iso3c, `Country Name`, Region, `Income Group 2022`, Zone, IsCountry, `DEI Score`, `DEI Momentum`, `DEI Score Rank`, `DEI Momentum Rank`, everything())
   dplyr::select(Year, CountryCode, CountryCode3, CountryName, Region, IncomeGroup, Quadrant, IsCountry, DEIScore,	MOMScore,	DEIRank, MOMRank, Supply_DEIScore, Supply_DEIRank, Supply_Quadrant, Demand_DEIScore, Demand_DEIRank, Demand_Quadrant, Institutions_DEIScore, 

@@ -184,13 +184,13 @@ Ex_INDEX_EP_Combined <- Ex_INDEX_EP_Combined %>%
     )
   ) %>%
   mutate(
-    Bottom_2_3_Institutional_Environment_Score = quantile(`Institutional Environment`, probs = 2/3, na.rm = TRUE),
-    Median_Institutional_Environment_Score_Momentum = median(`Institutional Environment Momentum`, na.rm = TRUE),
-    `Institutional Environment Zone` = case_when(
-      `Institutional Environment` > Bottom_2_3_Institutional_Environment_Score & `Institutional Environment Momentum` >= Median_Institutional_Environment_Score_Momentum ~ "Stand Out",
-      `Institutional Environment` > Bottom_2_3_Institutional_Environment_Score & `Institutional Environment Momentum` < Median_Institutional_Environment_Score_Momentum ~ "Stall Out",
-      `Institutional Environment` <= Bottom_2_3_Institutional_Environment_Score & `Institutional Environment Momentum` < Median_Institutional_Environment_Score_Momentum ~ "Watch Out",
-      `Institutional Environment` <= Bottom_2_3_Institutional_Environment_Score & `Institutional Environment Momentum` >= Median_Institutional_Environment_Score_Momentum ~ "Break Out"
+    Bottom_2_3_Institutions_Score = quantile(`Institutions`, probs = 2/3, na.rm = TRUE),
+    Median_Institutions_Score_Momentum = median(`Institutions Momentum`, na.rm = TRUE),
+    `Institutions Zone` = case_when(
+      `Institutions` > Bottom_2_3_Institutions_Score & `Institutions Momentum` >= Median_Institutions_Score_Momentum ~ "Stand Out",
+      `Institutions` > Bottom_2_3_Institutions_Score & `Institutions Momentum` < Median_Institutions_Score_Momentum ~ "Stall Out",
+      `Institutions` <= Bottom_2_3_Institutions_Score & `Institutions Momentum` < Median_Institutions_Score_Momentum ~ "Watch Out",
+      `Institutions` <= Bottom_2_3_Institutions_Score & `Institutions Momentum` >= Median_Institutions_Score_Momentum ~ "Break Out"
     )
   ) %>%
   mutate(
@@ -205,7 +205,7 @@ Ex_INDEX_EP_Combined <- Ex_INDEX_EP_Combined %>%
   ) %>%
   ungroup() %>%
   # Optionally, remove the helper columns if they are no longer needed
-  select(-Bottom_2_3_Supply_Score, -Median_Supply_Score_Momentum, -Bottom_2_3_Demand_Score, -Median_Demand_Score_Momentum,-Bottom_2_3_Institutional_Environment_Score, -Median_Institutional_Environment_Score_Momentum, -Bottom_2_3_Innovation_Score, -Median_Innovation_Score_Momentum)
+  select(-Bottom_2_3_Supply_Score, -Median_Supply_Score_Momentum, -Bottom_2_3_Demand_Score, -Median_Demand_Score_Momentum,-Bottom_2_3_Institutions_Score, -Median_Institutions_Score_Momentum, -Bottom_2_3_Innovation_Score, -Median_Innovation_Score_Momentum)
   
 
 ## Merge to country reference info spreadsheet

@@ -387,12 +387,23 @@ Ex_INDEX_EP_Combined_LONG <- Ex_INDEX_EP_Combined_LONG %>%
 ### Multiple mutation function which trims words like "Momentum", "Rank", and "Qaurtile" from variable to create new "variable parent" column. Variable parent column
 
 
+# Ex_INDEX_EP_Combined_LONG <- Ex_INDEX_EP_Combined_LONG %>%
+#   mutate(variable_name = variable) %>%
+#   mutate(variable_name = gsub(" Momentum", "", variable_name), 
+#          variable_name = gsub(" Zone", "", variable_name),
+#          variable_name = gsub(" Quartile", "", variable_name),
+#          variable_name = gsub(" Rank", "", variable_name))
+
 Ex_INDEX_EP_Combined_LONG <- Ex_INDEX_EP_Combined_LONG %>%
   mutate(variable_name = variable) %>%
-  mutate(variable_name = gsub(" Momentum", "", variable_name), 
-         variable_name = gsub(" Zone", "", variable_name),
-         variable_name = gsub(" Quartile", "", variable_name),
-         variable_name = gsub(" Rank", "", variable_name))
+  mutate(variable_name = gsub(" Momentum| Zone| Quartile| Rank", "", variable_name)) %>%
+  mutate(variable_name = case_when(
+    variable_name == 'Index Score' & Type == 'Score' ~ 'Overall Score',
+    variable_name == 'Index Score' & Type == 'Rank' ~ 'Overall Score',
+    variable_name == 'Index Score' & Type == 'Momentum' ~ 'Overall Momentum',
+    variable_name == 'Index Score' & Type == 'Momentum Rank' ~ 'Overall Momentum',
+    TRUE ~ variable_name))
+
 
 ## Mutate function which classifies entries in "variable parent" column as either clusters or components, or overall scores
 

@@ -53,14 +53,52 @@ Ex_complete_database <- read_excel("merged_all_year_ind_240709.xlsx", guess_max 
 # latest_data_years <- Ex_complete_database %>%
 #   summarise(across(where(is.numeric), ~ max(Year[!is.na(.)], na.rm = TRUE))) %>%
 #   pivot_longer(
-#     cols = everything(), 
-#     names_to = "Code", 
+#     cols = everything(),
+#     names_to = "Code",
 #     values_to = "latest_year"
 #   )
 # 
 # latest_data_years <- latest_data_years %>%
 #   left_join(Index_Rebuild, by = 'Code')
-# 
+
+
+#check data availability by country and year
+# Calculate percentage of non-null data for each country and year
+Ex_complete_database_forcheck <- Ex_complete_database %>%
+  filter(Country %in% DII_Country$Country) 
+
+non_null_data_percentage <- Ex_complete_database_forcheck %>%
+  pivot_longer(cols = -c(Country, Year), 
+               names_to = "Indicator", 
+               values_to = "Value") %>%
+  group_by(Country, Year) %>%
+  summarise(
+    Total_Points = n(),
+    Non_Null_Points = sum(!is.na(Value)),
+    Percent_Non_Null = Non_Null_Points / Total_Points * 100,
+    .groups = 'drop'
+  )
+
+# Calculate overall percentage of non-null data for each year
+overall_non_null_data_percentage <- non_null_data_percentage %>%
+  group_by(Year) %>%
+  summarise(
+    Overall_Percent_Non_Null = mean(Percent_Non_Null, na.rm = TRUE),
+    .groups = 'drop'
+  )
+
+# Calculate overall percentage of non-null data for each country
+overall_non_null_data_percentage_country <- non_null_data_percentage %>%
+  group_by(Country) %>%
+  summarise(
+    Overall_Percent_Non_Null = mean(Percent_Non_Null, na.rm = TRUE),
+    .groups = 'drop'
+  )
+
+write_xlsx(overall_non_null_data_percentage_country, paste0("Analysis/overall_non_null_data_percentage_country_", Sys.Date(), ".xlsx"), format_headers = F)
+write_xlsx(overall_non_null_data_percentage, paste0("Analysis/overall_non_null_data_percentage_", Sys.Date(), ".xlsx"), format_headers = F)
+
+
 
 n_distinct(Ex_complete_database$Country)
 
