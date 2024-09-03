@@ -13,11 +13,13 @@ library(tidyselect)
 
 ALL_Ex_INDEX_EP_Combined_LONG <- Driver_Ex_INDEX_EP_Combined_LONG %>%
   bind_rows(Overall_Ex_INDEX_EP_Combined_LONG %>%
-              filter(Class %in% c('Index Score', 'Index')), .) %>%
-  filter(Year == 2023) %>%
+              filter(Class %in% c('Overall Score', 'Index', 'Overall Momentum')), .) %>%
+  filter(Year == 2023, !Type == 'Zone') %>%
   rename(CountryCode3 = Country)
 
 DEI2023_EP_Combined <- ALL_Ex_INDEX_EP_Combined_LONG
+
+DEI2023_EP_Combined$value <- as.numeric(as.character(DEI2023_EP_Combined$value))
 
 DEI2023_EP_top3 <- DEI2023_EP_Combined %>%
   group_by(CountryCode3, Driver) %>%
@@ -98,10 +100,11 @@ EP_Checklist <- read_xlsx("Dashboard_Checklist_ISO3_DATE.xlsx") %>%
 
 DEI2023_EP <- DEI2023_EP %>%
   mutate(Scorecard = "Digital Evolution") %>%
-  mutate(Class = (ifelse(Class == 'Index Score', "Overall Score", Class))) %>%
-  mutate(Type = (ifelse(Type == 'Quartile', "Score Quartile", Type))) %>%
-  filter(!Class == "Index")
-
+  mutate(Type = case_when(
+    Type == 'Quartile' ~ "Score Quartile",
+    Type == 'Momentum' ~ "Momentum Score",
+    TRUE ~ Type
+  ))
 
 DEI2023 <- DEI2023_EP 
 
@@ -142,7 +145,7 @@ DEI_ZONE <- DEI2023 %>%
 
 # years_check <- unique(DEI2023$Year)
 # print(years_check)
-
+  
 write_xlsx(DEI2023, paste0("Dashboard Checklist/DEI2023_check", Sys.Date(), ".xlsx"))
 
 write_xlsx(DEI2023_TOP, paste0("Dashboard Checklist/DEI2023_TOP_", Sys.Date(), ".xlsx"))
@@ -199,12 +202,8 @@ DES <- lapply(DES, function(x){arrange(x, ROW)})
 
 
 dir.create("Dashboard Checklist")
+
 write_xlsx(DES, paste0("Dashboard Checklist/Dashboard_Checlist_ALL_", Sys.Date(), ".xlsx"))
-
-
-
-
-write_xlsx(Ex_INDEX_EP_Combined_LONG, paste0("Booklet Prints/Driver_Booklet_FULL_", Sys.Date(), ".xlsx"), format_headers = F)
 
 current_directory <- getwd()
 
